@@ -1,0 +1,17 @@
+development:
+  adapter: postgresql
+  encoding: unicode
+  database: menu_demo_api_development
+  pool: 5
+  host: localhost
+  username: menu_demo_api
+  password: lewagon2019
+
+test:
+  adapter: postgresql
+  encoding: unicode
+  database: menu_demo_api_test
+  pool: 5
+  host: localhost
+  username: menu_demo_api
+  password: lewagon2019
