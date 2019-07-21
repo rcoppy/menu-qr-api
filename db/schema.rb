@@ -10,14 +10,57 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_21_213010) do
+ActiveRecord::Schema.define(version: 2019_07_21_223228) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "items", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.integer "price"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "items_menus", force: :cascade do |t|
+    t.bigint "menu_id"
+    t.bigint "item_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_id"], name: "index_items_menus_on_item_id"
+    t.index ["menu_id"], name: "index_items_menus_on_menu_id"
+  end
+
+  create_table "items_orders", force: :cascade do |t|
+    t.bigint "order_id"
+    t.bigint "item_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_id"], name: "index_items_orders_on_item_id"
+    t.index ["order_id"], name: "index_items_orders_on_order_id"
+  end
+
   create_table "jwt_blacklist", force: :cascade do |t|
     t.string "jti", null: false
     t.index ["jti"], name: "index_jwt_blacklist_on_jti"
+  end
+
+  create_table "menus", force: :cascade do |t|
+    t.bigint "chef_id"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["chef_id"], name: "index_menus_on_chef_id"
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.bigint "customer_id"
+    t.bigint "chef_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["chef_id"], name: "index_orders_on_chef_id"
+    t.index ["customer_id"], name: "index_orders_on_customer_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -32,4 +75,11 @@ ActiveRecord::Schema.define(version: 2019_07_21_213010) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "items_menus", "items"
+  add_foreign_key "items_menus", "menus"
+  add_foreign_key "items_orders", "items"
+  add_foreign_key "items_orders", "orders"
+  add_foreign_key "menus", "users", column: "chef_id"
+  add_foreign_key "orders", "users", column: "chef_id"
+  add_foreign_key "orders", "users", column: "customer_id"
 end
