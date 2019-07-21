@@ -6,6 +6,9 @@ ruby '2.5.3'
 # env vars
 gem 'dotenv-rails', groups: [:development, :test]
 
+# generates objects from schemas, used by rspec for testing
+gem 'fabrication'
+
 # for authentication
 gem 'devise'
 gem 'devise-jwt'

@@ -1,7 +1,12 @@
 require 'rails_helper'
 
-RSpec.describe 'POST /users/sign_up', type: :request do
-  let(:url) { '/users/sign_up' }
+def json
+  JSON.parse(response.body)
+end
+# ^ bad practice https://stackoverflow.com/questions/43429463/how-to-test-controller-post-create-of-json-api-on-rails-using-rspec
+
+RSpec.describe 'POST /users', type: :request do
+  let(:url) { '/users' }
   let(:params) do
     {
       user: {
