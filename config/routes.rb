@@ -6,11 +6,6 @@ Rails.application.routes.draw do
                   sessions: 'sessions',
                   registrations: 'registrations'
                 }
-
-      resources :menus do
-        resources :items, only []
-      end
-      resources :items
       
       # customer routes
       get '/chefs/:id/menu', to: 'menus#show_current_menu', as: 'current_menu'
@@ -25,7 +20,7 @@ Rails.application.routes.draw do
 
       # chef routes
       get '/customers', to: 'users#index', as: 'customers'
-      
+
       get '/menus', to: 'menus#index', as: 'menus'
       get '/menus/:id', to: 'menus#show', as: 'menu'
       get '/items', to: 'items#index', as: 'chef_items'
