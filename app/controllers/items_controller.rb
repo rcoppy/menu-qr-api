@@ -1,6 +1,7 @@
 class ItemsController < ApplicationController
   before_action :set_item, only: [:show, :update, :destroy]
-
+  load_and_authorize_resource
+  
   # GET /items
   def index
     @items = Item.all

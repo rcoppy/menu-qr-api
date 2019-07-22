@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_21_223228) do
+ActiveRecord::Schema.define(version: 2019_07_22_001657) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,6 +21,8 @@ ActiveRecord::Schema.define(version: 2019_07_21_223228) do
     t.integer "price"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "chef_id"
+    t.index ["chef_id"], name: "index_items_on_chef_id"
   end
 
   create_table "items_menus", force: :cascade do |t|
@@ -51,6 +53,7 @@ ActiveRecord::Schema.define(version: 2019_07_21_223228) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "is_current"
     t.index ["chef_id"], name: "index_menus_on_chef_id"
   end
 
@@ -71,10 +74,12 @@ ActiveRecord::Schema.define(version: 2019_07_21_223228) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "is_chef"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "items", "users", column: "chef_id"
   add_foreign_key "items_menus", "items"
   add_foreign_key "items_menus", "menus"
   add_foreign_key "items_orders", "items"

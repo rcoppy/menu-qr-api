@@ -5,6 +5,20 @@ class Ability
 
   def initialize(user)
     # Define abilities for the passed in user here. For example:
+    
+    can :manage User, id: user.id
+
+    if user.is_chef?
+      can [:read, :update] Order, chef_id: user.id
+      can :read, User, :orders { chef_id: user.id }
+      can :manage, Menu, chef_id: user.id
+      can :manage, Item, chef_id: user.id 
+    else
+      can [:read, :update] Order, customer_id: user.id
+      can :read, User, :orders { customer_id: user.id }
+      can :read, Menu, is_current: true
+      can :read, Item, :menus { is_current: true } 
+    end
     #
     #   user ||= User.new # guest user (not logged in)
     #   if user.admin?
