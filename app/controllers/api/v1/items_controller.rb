@@ -4,7 +4,11 @@ class Api::V1::ItemsController < ApplicationController
 
   # GET /items
   def index
-    @items = Item.all
+    if current_user.is_chef
+      @items = Item.where(chef_id: current_user.id)  
+    else
+      @items = Item.joins(:items_orders).joins(:orders).where('orders.customer_id = ?', current_user.id)
+    end
 
     render json: @items
   end

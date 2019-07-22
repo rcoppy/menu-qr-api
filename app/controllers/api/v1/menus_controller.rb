@@ -4,7 +4,7 @@ class Api::V1::MenusController < ApplicationController
 
   # GET /menus
   def index
-    @menus = Menu.all
+    @menus = Menu.where(chef_id: current_user.id)
 
     render json: @menus
   end
@@ -17,6 +17,10 @@ class Api::V1::MenusController < ApplicationController
   # POST /menus
   def create
     @menu = Menu.new(menu_params)
+    
+    params[:items].each do |item_id|
+      items_menu.create(menu_id: @menu.id, item_id: item_id)
+    end
 
     if @menu.save
       render json: @menu, status: :created, location: @menu

@@ -6,7 +6,7 @@ class Api::V1::OrdersController < ApplicationController
   def index
     key = current_user.is_chef ? :chef_id : :customer_id
 
-    @orders = Order.find_by(key => current_user.id)
+    @orders = Order.where(key => current_user.id)
 
     render json: @orders
   end
