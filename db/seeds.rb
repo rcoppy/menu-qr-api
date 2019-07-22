@@ -23,7 +23,7 @@ chef_menu.is_current = true;
 chef_items.each { |item| chef_menu.items << item }
 
 customer_order = Order.create(customer_id: customer.id, chef_id: chef.id)
-customer_order << chef_items[0]
-customer_order << chef_items[0]
-customer_order << chef_items[1]
-customer_order << chef_items[-1]
+customer_order.items << chef_items[0]
+customer_order.items << chef_items[0]
+customer_order.items << chef_items[1]
+customer_order.items << chef_items[-1]
