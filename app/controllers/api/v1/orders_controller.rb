@@ -4,7 +4,9 @@ class Api::V1::OrdersController < ApplicationController
 
   # GET /orders
   def index
-    @orders = Order.all
+    key = current_user.is_chef ? :chef_id : :customer_id
+
+    @orders = Order.find_by(key => current_user.id)
 
     render json: @orders
   end
@@ -17,6 +19,14 @@ class Api::V1::OrdersController < ApplicationController
   # POST /orders
   def create
     @order = Order.new(order_params)
+    # need to assign items
+    # items come in the form: 
+    # {
+    #   items: [id, id, id, id] 
+    # }
+    params[:items].each do |item_id|
+      ItemsOrder.create(order_id: @order.id, item_id: item_id)
+    end
 
     if @order.save
       render json: @order, status: :created, location: @order
