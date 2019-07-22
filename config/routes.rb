@@ -1,11 +1,12 @@
 Rails.application.routes.draw do
-  namespace :api, defaults: { format: :json } do
-    namespace :v1, defaults: { format: :json } do
-      devise_for :users,
+  devise_for :users,
                 controllers: {
                   sessions: 'sessions',
                   registrations: 'registrations'
                 }
+  namespace :api, defaults: { format: :json } do
+    namespace :v1, defaults: { format: :json } do
+      
       
       # customer routes
       get '/chefs/:id/menu', to: 'menus#show_current_menu', as: 'current_menu'
