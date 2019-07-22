@@ -18,6 +18,7 @@ Rails.application.routes.draw do
       # shared routes
       get '/orders/:order_id', to: 'orders#show', as: 'order'
       patch '/orders/:order_id', to: 'orders#update', as: 'update_order'
+      get '/orders', to: 'orders#index', as: 'orders'
 
       # chef routes
       get '/customers', to: 'users#index', as: 'customers'
@@ -38,7 +39,7 @@ Rails.application.routes.draw do
 
       post '/chefs/:id/menu', to: 'menus#set_current_menu', as: 'set_chef_menu'
 
-      get '/chefs/:id/orders', to: 'orders#show_chef', as: 'chef_orders'
+      # get '/chefs/:id/orders', to: 'orders#index', as: 'chef_orders'
     end
   end
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html

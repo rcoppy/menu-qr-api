@@ -4,9 +4,9 @@ class Api::V1::UsersController < ApplicationController
   def index 
     # only chefs can query index of users
     # returned index consists of users who have an order with the chef
-    @users = User.joins(:orders).find_by(chef_id: current_user.id)
+    @users = User.joins("INNER JOIN orders ON orders.customer_id = users.id").where(:orders => { chef_id: current_user.id })
     # get customers
-    render json: resource
+    render json: @users
   end
   
   private
