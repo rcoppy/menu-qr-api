@@ -1,7 +1,7 @@
-class MenusController < ApplicationController
+class Api::V1::MenusController < ApplicationController
   before_action :set_menu, only: [:show, :update, :destroy]
   load_and_authorize_resource
-  
+
   # GET /menus
   def index
     @menus = Menu.all
