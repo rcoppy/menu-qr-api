@@ -31,5 +31,13 @@ module MenuDemoApi
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+
+    # let requests from localhost through
+    config.middleware.insert_before 0, Rack::Cors do
+      allow do
+         origins 'http://localhost:8080', 'https://localhost:8080'
+         resource '*', :headers => :any, :methods => [:get, :post, :options]
+       end
+    end
   end
 end
