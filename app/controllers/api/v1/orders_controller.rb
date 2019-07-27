@@ -4,9 +4,11 @@ class Api::V1::OrdersController < ApplicationController
 
   # GET /orders
   def index
-    key = current_user.is_chef ? :chef_id : :customer_id
-
-    @orders = Order.where(key => current_user.id)
+    if current_user.is_restaurant_owner
+      @orders = Order.where("restaurant_id IN (?)", current_user.restaurants)
+    else
+      @orders = Order.where(:user_id => current_user.id)
+    end
 
     render json: @orders
   end

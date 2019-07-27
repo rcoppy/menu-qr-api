@@ -5,6 +5,6 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :jwt_authenticatable,
          jwt_revocation_strategy: JWTBlacklist
-  has_many :menus
-  has_many :orders
+  has_many :orders, :dependent => :destroy
+  has_many :restaurants, :dependent => :destroy
 end

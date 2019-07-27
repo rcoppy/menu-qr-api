@@ -4,15 +4,21 @@ class Api::V1::ItemsController < ApplicationController
 
   # GET /items
   def index
-    if current_user.is_chef
-      @items = Item.where(chef_id: current_user.id)  
+    if current_user.is_restaurant_owner
+      @items = Item.where(["restaurant_id IN (?)", current_user.restaurants)  
     else
-      @items = Item.joins(:items_orders).joins(:orders).where('orders.customer_id = ?', current_user.id)
+      @items = Item.joins(:order_items).joins(:orders).where('orders.user_id = ?', current_user.id)
     end
 
     render json: @items
   end
 
+  # GET /restaurants/1/items
+  def restaurant_index 
+    @items = Item.where(restaurant_id: params[:id])
+    render json: @items
+  end
+  
   # GET /items/1
   def show
     render json: @item
