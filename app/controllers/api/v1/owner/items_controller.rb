@@ -1,32 +1,23 @@
 class Api::V1::Owner::ItemsController < ApplicationController
-  before_action :set_item, only: [:show, :update, :destroy]
+  before_action :set_item, only: [:show, :update]
   load_and_authorize_resource
 
   # GET /items
   def index
-    if current_user.is_restaurant_owner
-      @items = Item.where("restaurant_id IN (?)", current_user.restaurants)  
-    else
-      @items = Item.joins(:order_items).joins(:orders).where('orders.user_id = ?', current_user.id)
-    end
+    @items = Item.where('restaurant_id IN (?)', current_user.restaurants)  
 
     render json: @items
   end
 
-  # GET /restaurants/1/items
-  def restaurant_index 
-    @items = Item.where(restaurant_id: params[:id])
-    render json: @items
-  end
-  
-  # GET /items/1
-  def show
+  def show 
+    @item = Item.find(id: params[:id])
+
     render json: @item
   end
 
   # POST /items
   def create
-    @item = Item.new(item_params)
+    @item = Item.new(item_params.merge(restaurant_id: params[:id]))
 
     if @item.save
       render json: @item, status: :created, location: nil
@@ -45,9 +36,10 @@ class Api::V1::Owner::ItemsController < ApplicationController
   end
 
   # DELETE /items/1
-  def destroy
-    @item.destroy
-  end
+  # def destroy
+  #   @item.destroy
+  # end
+  # directly deleting items will break existing orders
 
   private
     # Use callbacks to share common setup or constraints between actions.
