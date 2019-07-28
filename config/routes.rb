@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
 
-  get 'tables/index,show,create'
   get 'api/v1/owner/user', to: 'api/v1/owner/users#show', as: 'owner_user'
   get 'api/v1/customer/user', to: 'api/v1/customer/users#show', as: 'customer_user'
   

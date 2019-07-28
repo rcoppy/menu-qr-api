@@ -6,12 +6,25 @@ class Api::V1::Owner::TablesController < ApplicationController
 
   # POST /restaurants
   def create
-    @table = Table.new(table_params)
+    if current_user.restaurant_ids.include?(params[:restaurant_id].to_i)
+      # find new table number
+      table_index = 1
+      tables = Table.where(restaurant_id: params[:restaurant_id])
+      if !tables.nil? && tables.count > 0
+        tables.each do |table|
+          table_index = table.table_number + 1 if table.table_number >= table_index
+        end 
+      end
 
-    if @table.save
-      render json: @table, status: :created, location: nil
+      @table = Table.new(restaurant: Restaurant.find(params[:restaurant_id]), table_number: table_index)
+
+      if @table.save
+        render json: @table, status: :created, location: nil
+      else
+        render json: @table.errors, status: :unprocessable_entity
+      end
     else
-      render json: @table.errors, status: :unprocessable_entity
+      render json: { error: "can't add tables to restaurants you don't own" }, status: :unprocessable_entity
     end
   end
 
@@ -37,6 +50,6 @@ class Api::V1::Owner::TablesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def table_params
-      params.require(:table).permit(:restaurant_id)
+      # params.require(:table).permit(:restaurant_id)
     end
 end

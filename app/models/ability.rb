@@ -14,6 +14,7 @@ class Ability
     can [:read, :update], Order, user_id: user.id
     can [:read, :create], Restaurant
     can :read, Item
+    can :read, Table
 
     if user.is_restaurant_owner?
       can [:read, :update], Order do |order|
@@ -25,7 +26,11 @@ class Ability
       can :manage, Restaurant, owner_id: user.id
       can :create, Item
       can :manage, Item do |item|
-        user.restaurant_ids.include?(item.restaurant.id)
+        user.restaurant_ids.include?(item.restaurant_id)
+      end
+      can :create, Table
+      can :manage, Table do |table|
+        user.restaurant_ids.include?(table.restaurant_id)
       end
     end 
        
