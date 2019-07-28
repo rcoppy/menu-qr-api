@@ -7,12 +7,7 @@ class Api::V1::Owner::RestaurantsController < ApplicationController
   # GET /restaurants
   def index
     # return restaurants that belong to current user
-    if current_user.is_restaurant_owner
-      @restaurants = Restaurant.where(owner_id: current_user.id)
-    else 
-      # non-owner has no restaurants
-      @restaurants = []
-    end
+    @restaurants = Restaurant.where(owner_id: current_user.id)
 
     render json: @restaurants
   end
@@ -29,10 +24,10 @@ class Api::V1::Owner::RestaurantsController < ApplicationController
     
     if !current_user.is_restaurant_owner
       current_user.is_restaurant_owner = true
-      current_user.save
+      current_user.save!
     end
 
-    @restaurant = Restaurant.new(restaurant_params)
+    @restaurant = Restaurant.new(restaurant_params.merge(owner_id: current_user.id))
 
     if @restaurant.save
       render json: @restaurant, status: :created, location: nil
@@ -63,6 +58,6 @@ class Api::V1::Owner::RestaurantsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def restaurant_params
-      params.require(:restaurant).permit(:name, :address, :image).merge(owner_id: current_user.id)
+      params.require(:restaurant).permit(:name, :address, :image)
     end
 end
