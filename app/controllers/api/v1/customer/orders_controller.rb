@@ -47,9 +47,9 @@ class Api::V1::Customer::OrdersController < ApplicationController
   end
 
   # DELETE /orders/1
-  def destroy
-    @order.destroy
-  end
+  # def destroy
+  #  @order.destroy
+  # end
 
   private
     # Use callbacks to share common setup or constraints between actions.

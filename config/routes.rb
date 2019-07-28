@@ -34,12 +34,12 @@ Rails.application.routes.draw do
         get '/items/:id', to: 'items#show', as: 'owner_item'
 
         get '/restaurants', to: 'restaurants#index', as: 'owner_restaurants'
-        get '/restaurants/:restaurant_id/orders/:order_id', to: 'orders#show', as: 'restaurant_order'
+        get '/orders/:id', to: 'orders#show', as: 'restaurant_order'
         get '/restaurants/:id/orders', to: 'orders#index', as: 'restaurant_orders'
 
         patch '/items/:id', to: 'items#update', as: 'update_item'
         patch '/restaurants/:id', to: 'restaurants#update', as: 'update_restaurant'
-        patch '/restaurants/:restaurant_id/orders/:order_id', to: 'orders#update', as: 'update_restaurant_order'
+        patch '/orders/:id', to: 'orders#update', as: 'update_restaurant_order'
 
         post '/restaurants', to: 'restaurants#create', as: 'new_owner_restaurant'
         post '/restaurants/:id/items', to: 'items#create', as: 'new_restaurant_item'
