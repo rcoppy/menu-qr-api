@@ -6,5 +6,5 @@ class User < ApplicationRecord
          :jwt_authenticatable,
          jwt_revocation_strategy: JWTBlacklist
   has_many :orders, :dependent => :destroy
-  has_many :restaurants, :dependent => :destroy
+  has_many :restaurants, :dependent => :destroy, foreign_key: "owner_id"
 end

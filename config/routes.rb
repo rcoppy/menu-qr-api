@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   get 'api/v1/customer/user', to: 'api/v1/customer/users#show', as: 'customer_user'
   
   devise_for :users,
+                defaults: { format: :json },
                 controllers: {
                   sessions: 'sessions',
                   registrations: 'registrations'

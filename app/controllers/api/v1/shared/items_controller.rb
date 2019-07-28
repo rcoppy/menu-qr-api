@@ -1,5 +1,5 @@
 class Api::V1::Shared::ItemsController < ApplicationController
-  load_and_authorize_resource
+  #load_and_authorize_resource
 
   # GET 
   def index
@@ -10,7 +10,7 @@ class Api::V1::Shared::ItemsController < ApplicationController
 
   # GET 
   def show 
-    @item = Item.find(id: params[:id])
+    @item = Item.find(params[:id])
     render json: @item
   end
   

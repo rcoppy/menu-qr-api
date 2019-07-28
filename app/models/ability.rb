@@ -10,19 +10,26 @@ class Ability
 
     can :manage, User, id: user.id
 
+    can :create, Order
+    can [:read, :update], Order, user_id: user.id
+    can [:read, :create], Restaurant
+    can :read, Item
+
     if user.is_restaurant_owner?
-      can [:read, :update], Order, ["restaurant_id IN (?)", user.restaurant_ids]
-      can :read, User, orders: { ["restaurant_id IN (?)", user.restaurant_ids] => true }
+      can [:read, :update], Order do |order|
+        user.restaurant_ids.include?(order.restaurant.id)
+      end
+      can :read, User do |customer|
+        !(user.restaurants.orders & customer.orders).empty?
+      end
       can :manage, Restaurant, owner_id: user.id
       can :create, Item
-      can :manage, Item, ["restaurant_id IN (?)", user.restaurant_ids] 
-      can :restaurant_index, Item, ["restaurant_id IN (?)", user.restaurant_ids]
-    else
-      can [:read, :update], Order, user_id: user.id
-      can [:read, :create], Restaurant
-      can :read, Item 
-      can :restaurant_index, Item
-    end
+      can :manage, Item do |item|
+        user.restaurant_ids.include?(item.restaurant.id)
+      end
+    end 
+       
+    
     #
     #   user ||= User.new # guest user (not logged in)
     #   if user.admin?
