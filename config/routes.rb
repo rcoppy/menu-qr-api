@@ -16,14 +16,15 @@ Rails.application.routes.draw do
         # customers can become owners through owner app/owner api restaurants#create
         get '/orders/:order_id', to: '/orders#show', as: 'customer_order'
         get '/orders', to: '/orders#index', as: 'customer_orders'
+        get '/restaurants/:id', to: 'restaurants#show', as: 'restaurant'
         get '/restaurants', to: '/restaurants#index', as: 'nearby_restaurants'
         patch '/orders/:order_id', to: '/orders#update', as: 'update_customer_order'
       end
 
       # shared
       namespace :shared, defaults: { format: :json } do
-        get '/restaurants/:id', to: 'items#index', as: 'restaurant_items'
-        get '/items/:id', to: 'items#index', as: 'restaurant_item'
+        get '/restaurants/:id/items', to: 'items#index', as: 'restaurant_items'
+        get '/items/:id', to: 'items#show', as: 'restaurant_item'
       end
 
       namespace :owner, defaults: { format: :json } do
@@ -33,6 +34,7 @@ Rails.application.routes.draw do
         get '/items', to: 'items#index', as: 'owner_items'
         get '/items/:id', to: 'items#show', as: 'owner_item'
 
+        get '/restaurants/:id', to: 'restaurants#show', as: 'owner_restaurant'
         get '/restaurants', to: 'restaurants#index', as: 'owner_restaurants'
         get '/orders/:id', to: 'orders#show', as: 'restaurant_order'
         get '/restaurants/:id/orders', to: 'orders#index', as: 'restaurant_orders'

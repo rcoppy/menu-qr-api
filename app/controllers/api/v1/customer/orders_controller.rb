@@ -16,7 +16,7 @@ class Api::V1::Customer::OrdersController < ApplicationController
 
   # POST /orders
   def create
-    @order = Order.new(order_params.merge(:customer_id => current_user.id))
+    @order = Order.new(order_params.merge(:user_id => current_user.id))
     # need to assign items
     # items come in the form: 
     # {

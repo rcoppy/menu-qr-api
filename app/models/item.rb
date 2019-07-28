@@ -8,7 +8,7 @@ class Item < ApplicationRecord
   validates :description, presence: true
   validates :price, presence: true
   validates :food_type, presence: true
-  validates :image, presence: true
+  # validates :image, presence: true
 
   # Price only an Integer
   validates :price, numericality: { only_integer: true }

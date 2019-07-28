@@ -17,12 +17,34 @@ class Api::V1::Owner::ItemsController < ApplicationController
 
   # POST /items
   def create
-    @item = Item.new(item_params.merge(restaurant_id: params[:id]))
+    # permit submitting many items at once
+    # or just one item at a time
+    if !params[:items].nil?
+      @items = []
+      bad_item = nil
+      were_there_any_failures = false
+      params[:items].each do |item|
+        @items << Item.new(multiple_item_params(item).merge(restaurant_id: params[:id]))
+        if !@items[-1].save
+          were_there_any_failures = true
+          bad_item = @items[-1]
+          break
+        end
+      end
 
-    if @item.save
-      render json: @item, status: :created, location: nil
-    else
-      render json: @item.errors, status: :unprocessable_entity
+      unless were_there_any_failures
+        render json: @items, status: :created, location: nil
+      else 
+        render json: bad_item.errors, status: :unprocessable_entity
+      end
+    else 
+      @item = Item.new(item_params.merge(restaurant_id: params[:id]))
+
+      if @item.save
+        render json: @item, status: :created, location: nil
+      else
+        render json: @item.errors, status: :unprocessable_entity
+      end
     end
   end
 
@@ -50,5 +72,9 @@ class Api::V1::Owner::ItemsController < ApplicationController
     # Only allow a trusted parameter "white list" through.
     def item_params
       params.require(:item).permit(:name, :description, :price)
+    end
+
+    def multiple_item_params(item_hash)
+      item_hash.require(:item).permit(:name, :description, :price)
     end
 end
