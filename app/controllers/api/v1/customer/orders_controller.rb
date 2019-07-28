@@ -24,16 +24,19 @@ class Api::V1::Customer::OrdersController < ApplicationController
     # {
     #   items: [id, id, id, id] 
     # }
-    order_item_hash = Hash.new(0)
-    params[:order][:items].each do |item|
-      order_item_hash[item[:item_id]] += item[:quantity]
-    end
-    order_item_hash.each do |item_id, quantity|
-      OrderItem.create(order_id: @order.id, item_id: item_id, quantity: quantity)
-    end
+    
 
-    if @order.save
-      render json: @order.joins(:order_items).joins(:items), status: :created, location: nil
+    if @order.save   
+      # order needs to be saved before order_items can be created
+      order_item_hash = Hash.new(0)
+      params[:order][:items].each do |item|
+        order_item_hash[item[:item_id]] += item[:quantity]
+      end
+      order_item_hash.each do |item_id, quantity|
+        OrderItem.create!(order: @order, item_id: item_id, quantity: quantity, item_price: Item.find(item_id).price)
+      end
+      
+      render json: { order: @order, items: @order.items, relations: @order.order_items }, status: :created, location: nil
     else
       render json: @order.errors, status: :unprocessable_entity
     end
@@ -56,7 +59,7 @@ class Api::V1::Customer::OrdersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_order
-      @order = Order.find(params[:id])
+      @order = Order.find(params[:order_id])
     end
 
     # Only allow a trusted parameter "white list" through.

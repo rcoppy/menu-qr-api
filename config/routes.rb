@@ -13,7 +13,7 @@ Rails.application.routes.draw do
     namespace :v1, defaults: { format: :json } do
       namespace :customer, defaults: { format: :json } do
         # customer routes
-        post '/restaurants/:restaurant_id/orders', to: 'orders#create', as: 'new_order'
+        post '/restaurants/:restaurant_id/tables/:table_id/orders', to: 'orders#create', as: 'new_order'
         # customers can become owners through owner app/owner api restaurants#create
         get '/orders/:order_id', to: 'orders#show', as: 'customer_order'
         get '/orders', to: 'orders#index', as: 'customer_orders'
