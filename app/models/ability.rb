@@ -12,8 +12,9 @@ class Ability
 
     if user.is_restaurant_owner?
       can [:read, :update], Order, ["restaurant_id IN (?)", user.restaurant_ids]
-      can :read, User, orders: { ["restaurant_id IN (?)", user.restaurant_ids] }
+      can :read, User, orders: { ["restaurant_id IN (?)", user.restaurant_ids] => true }
       can :manage, Restaurant, owner_id: user.id
+      can :create, Item
       can :manage, Item, ["restaurant_id IN (?)", user.restaurant_ids] 
       can :restaurant_index, Item, ["restaurant_id IN (?)", user.restaurant_ids]
     else

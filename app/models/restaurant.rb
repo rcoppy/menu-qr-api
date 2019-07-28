@@ -8,7 +8,8 @@ class Restaurant < ApplicationRecord
   # Presence
   validates :name, presence: true
   validates :address, presence: true
-  validates :image, presence: true
+  # validates :image, presence: true
+  # gets complicated trying to upload an image via JSON, will revisit
 
   # Unique
   validates :name, uniqueness: true

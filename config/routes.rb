@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get '/users', to: 'api/v1/users#index', as: 'users'
+  get '/user', to: 'api/v1/users#show', as: 'user'
   devise_for :users,
                 controllers: {
                   sessions: 'sessions',
@@ -16,7 +18,7 @@ Rails.application.routes.draw do
       patch '/orders/:order_id', to: 'orders#update', as: 'update_order'
       get '/orders', to: 'orders#index', as: 'orders'
       get '/restaurants/:id/', to: 'items#restaurant_index', as: 'restaurant_items'
-
+      post '/restaurants', to: 'restaurants#create', as: 'new_restaurant'
       # owner routes
       get '/customers', to: 'users#index', as: 'customers'
 
@@ -29,7 +31,7 @@ Rails.application.routes.draw do
       patch '/items/:id', to: 'items#update', as: 'update_item'
 
       # post '/menus', to: 'menus#create', as: 'create_menu'
-      post '/items', to: 'items#create', as: 'create_item'
+      post '/restaurants/:id/items', to: 'items#create', as: 'create_item'
 
       # delete '/menus/:id', to: 'menus#destroy', as: 'destroy_menu'
       delete '/items/:id', to: 'items#destroy', as: 'destroy_item'

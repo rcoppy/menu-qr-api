@@ -5,7 +5,7 @@ class Api::V1::ItemsController < ApplicationController
   # GET /items
   def index
     if current_user.is_restaurant_owner
-      @items = Item.where(["restaurant_id IN (?)", current_user.restaurants)  
+      @items = Item.where("restaurant_id IN (?)", current_user.restaurants)  
     else
       @items = Item.joins(:order_items).joins(:orders).where('orders.user_id = ?', current_user.id)
     end
@@ -29,7 +29,7 @@ class Api::V1::ItemsController < ApplicationController
     @item = Item.new(item_params)
 
     if @item.save
-      render json: @item, status: :created, location: @item
+      render json: @item, status: :created, location: nil
     else
       render json: @item.errors, status: :unprocessable_entity
     end

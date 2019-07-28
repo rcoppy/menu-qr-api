@@ -26,12 +26,16 @@ class Api::V1::RestaurantsController < ApplicationController
   def create
 
     # if this is user's first restaurant then make them an owner
-    current_user.is_restaurant_owner = true unless current_user.is_restaurant_owner
+    
+    if !current_user.is_restaurant_owner
+      current_user.is_restaurant_owner = true
+      current_user.save
+    end
 
-    @restaurant = Restaurant.new(restaurant_params, owner_id: current_user.id)
+    @restaurant = Restaurant.new(restaurant_params)
 
     if @restaurant.save
-      render json: @restaurant, status: :created, location: @restaurant
+      render json: @restaurant, status: :created, location: nil
     else
       render json: @restaurant.errors, status: :unprocessable_entity
     end
@@ -59,6 +63,6 @@ class Api::V1::RestaurantsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def restaurant_params
-      params.require(:restaurant).permit(:name)
+      params.require(:restaurant).permit(:name, :address, :image).merge(owner_id: current_user.id)
     end
 end
