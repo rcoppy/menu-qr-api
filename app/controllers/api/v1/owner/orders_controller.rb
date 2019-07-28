@@ -1,4 +1,4 @@
-class Api::V1::OrdersController < ApplicationController
+class Api::V1::Owner::OrdersController < ApplicationController
   before_action :set_order, only: [:show, :update, :destroy]
   load_and_authorize_resource
 

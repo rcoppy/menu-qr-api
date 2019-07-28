@@ -1,4 +1,4 @@
-class Api::V1::ItemsController < ApplicationController
+class Api::V1::Owner::ItemsController < ApplicationController
   before_action :set_item, only: [:show, :update, :destroy]
   load_and_authorize_resource
 

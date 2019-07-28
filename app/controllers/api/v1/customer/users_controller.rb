@@ -1,4 +1,4 @@
-class Api::V1::UsersController < ApplicationController
+class Api::V1::Customer::UsersController < ApplicationController
   load_and_authorize_resource
 
   # user can view their own info

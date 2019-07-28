@@ -1,4 +1,4 @@
-class Api::V1::RestaurantsController < ApplicationController
+class Api::V1::Owner::RestaurantsController < ApplicationController
   before_action :set_restaurant, only: [:show, :update, :destroy]
   load_and_authorize_resource
 
