@@ -1,14 +1,10 @@
 class Api::V1::Customer::OrdersController < ApplicationController
-  before_action :set_order, only: [:show, :update, :destroy]
+  before_action :set_order, only: [:show, :update]
   load_and_authorize_resource
 
   # GET /orders
   def index
-    if current_user.is_restaurant_owner
-      @orders = Order.where("restaurant_id IN (?)", current_user.restaurants)
-    else
-      @orders = Order.where(:user_id => current_user.id)
-    end
+    @orders = Order.where(:user_id => current_user.id)
 
     render json: @orders
   end
@@ -20,7 +16,7 @@ class Api::V1::Customer::OrdersController < ApplicationController
 
   # POST /orders
   def create
-    @order = Order.new(order_params)
+    @order = Order.new(order_params.merge(:customer_id => current_user.id))
     # need to assign items
     # items come in the form: 
     # {
@@ -31,7 +27,7 @@ class Api::V1::Customer::OrdersController < ApplicationController
     end
 
     if @order.save
-      render json: @order, status: :created, location: @order
+      render json: @order, status: :created, location: nil
     else
       render json: @order.errors, status: :unprocessable_entity
     end
@@ -39,7 +35,7 @@ class Api::V1::Customer::OrdersController < ApplicationController
 
   # PATCH/PUT /orders/1
   def update
-    if @order.update(order_params)
+    if @order.update(order_update_params)
       render json: @order
     else
       render json: @order.errors, status: :unprocessable_entity
@@ -59,6 +55,11 @@ class Api::V1::Customer::OrdersController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def order_params
-      params.require(:order).permit(:customer_id, :chef_id)
+      params.require(:order).permit(:restaurant_id)
+    end
+
+    def order_update_params
+      params.require(:order).permit() # at the moment there's nothing the user can update
+      # TODO: user cancel order 
     end
 end
