@@ -27,6 +27,8 @@ Rails.application.routes.draw do
       namespace :shared, defaults: { format: :json } do
         get '/restaurants/:id/items', to: 'items#index', as: 'restaurant_items'
         get '/items/:id', to: 'items#show', as: 'restaurant_item'
+        get '/restaurants/:id/tables', to: 'tables#index', as: 'restaurant_tables'
+        get '/tables/:id', to: 'tables#show', as: 'restaurant_table'
       end
 
       namespace :owner, defaults: { format: :json } do
@@ -47,7 +49,7 @@ Rails.application.routes.draw do
 
         post '/restaurants', to: 'restaurants#create', as: 'new_owner_restaurant'
         post '/restaurants/:id/items', to: 'items#create', as: 'new_restaurant_item'
-
+        post '/restaurants/:restaurant_id/tables', to: 'tables#create', as: 'new_restaurant_table'
         # delete '/items/:id', to: 'items#destroy', as: 'destroy_item'
         # instead of deleting items (which can break existing orders), set an item to not visible
       end
