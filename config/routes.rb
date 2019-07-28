@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  get 'tables/index,show,create'
   get 'api/v1/owner/user', to: 'api/v1/owner/users#show', as: 'owner_user'
   get 'api/v1/customer/user', to: 'api/v1/customer/users#show', as: 'customer_user'
   
@@ -13,13 +14,13 @@ Rails.application.routes.draw do
     namespace :v1, defaults: { format: :json } do
       namespace :customer, defaults: { format: :json } do
         # customer routes
-        post '/restaurants/:id/orders', to: 'orders#create', as: 'new_order'
+        post '/restaurants/:restaurant_id/orders', to: 'orders#create', as: 'new_order'
         # customers can become owners through owner app/owner api restaurants#create
-        get '/orders/:order_id', to: '/orders#show', as: 'customer_order'
-        get '/orders', to: '/orders#index', as: 'customer_orders'
+        get '/orders/:order_id', to: 'orders#show', as: 'customer_order'
+        get '/orders', to: 'orders#index', as: 'customer_orders'
         get '/restaurants/:id', to: 'restaurants#show', as: 'restaurant'
-        get '/restaurants', to: '/restaurants#index', as: 'nearby_restaurants'
-        patch '/orders/:order_id', to: '/orders#update', as: 'update_customer_order'
+        get '/restaurants', to: 'restaurants#index', as: 'nearby_restaurants'
+        patch '/orders/:order_id', to: 'orders#update', as: 'update_customer_order'
       end
 
       # shared

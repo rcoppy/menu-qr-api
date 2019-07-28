@@ -16,18 +16,24 @@ class Api::V1::Customer::OrdersController < ApplicationController
 
   # POST /orders
   def create
-    @order = Order.new(order_params.merge(:user_id => current_user.id))
+    @order = Order.new(:restaurant_id => params[:restaurant_id],
+                       :table_id => params[:table_id],
+                       :user_id => current_user.id)
     # need to assign items
     # items come in the form: 
     # {
     #   items: [id, id, id, id] 
     # }
-    params[:items].each do |item_id|
-      ItemsOrder.create(order_id: @order.id, item_id: item_id)
+    order_item_hash = Hash.new(0)
+    params[:order][:items].each do |item|
+      order_item_hash[item[:item_id]] += item[:quantity]
+    end
+    order_item_hash.each do |item_id, quantity|
+      OrderItem.create(order_id: @order.id, item_id: item_id, quantity: quantity)
     end
 
     if @order.save
-      render json: @order, status: :created, location: nil
+      render json: @order.joins(:order_items).joins(:items), status: :created, location: nil
     else
       render json: @order.errors, status: :unprocessable_entity
     end
@@ -55,7 +61,9 @@ class Api::V1::Customer::OrdersController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def order_params
-      params.require(:order).permit(:restaurant_id)
+      # params.require(:order).permit(:restaurant_id, :table_id, :items => [])
+      # strong params can't take an array of hashes :(
+      # so as a hack for now we're gonna ignore it
     end
 
     def order_update_params
