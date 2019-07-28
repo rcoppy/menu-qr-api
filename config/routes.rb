@@ -14,35 +14,37 @@ Rails.application.routes.draw do
         # customer routes
         post '/restaurants/:id/orders', to: 'orders#create', as: 'new_order'
         # customers can become owners through owner app/owner api restaurants#create
-        get '/orders/:order_id', to: 'api/v1/customer/orders#show', as: 'customer_order'
-        get '/orders', to: 'api/v1/customer/orders#index', as: 'customer_orders'
-        get '/restaurants', to: 'api/v1/customer/restaurants#index', as: 'nearby_restaurants'
-        patch '/orders/:order_id', to: 'api/v1/customer/orders#update', as: 'update_customer_order'
+        get '/orders/:order_id', to: '/orders#show', as: 'customer_order'
+        get '/orders', to: '/orders#index', as: 'customer_orders'
+        get '/restaurants', to: '/restaurants#index', as: 'nearby_restaurants'
+        patch '/orders/:order_id', to: '/orders#update', as: 'update_customer_order'
       end
 
       # shared
-      get '/restaurants/:id/', to: 'api/v1/shared/items#index', as: 'restaurant_items'
-      get '/restaurants/:restaurant_id/items/:item_id', to: 'api/v1/shared/items#index', as: 'restaurant_item'
+      namespace :shared, defaults: { format: :json } do
+        get '/restaurants/:id', to: 'items#index', as: 'restaurant_items'
+        get '/items/:id', to: 'items#index', as: 'restaurant_item'
+      end
 
       namespace :owner, defaults: { format: :json } do
         # owner routes
-        get '/customers', to: 'api/v1/owner/users#index', as: 'customers'
+        get '/customers', to: 'users#index', as: 'customers'
 
-        get '/items', to: 'api/v1/owner/items#index', as: 'owner_items'
-        get '/items/:id', to: 'api/v1/owner/items#show', as: 'owner_item'
+        get '/items', to: 'items#index', as: 'owner_items'
+        get '/items/:id', to: 'items#show', as: 'owner_item'
 
-        get '/restaurants', to: 'api/v1/owner/restaurants#index', as: 'owner_restaurants'
-        get '/restaurants/:restaurant_id/orders/:order_id', to: 'api/v1/owner/orders#show', as: 'restaurant_order'
-        get '/restaurants/:id/orders', to: 'api/v1/owner/orders#index', as: 'restaurant_orders'
+        get '/restaurants', to: 'restaurants#index', as: 'owner_restaurants'
+        get '/restaurants/:restaurant_id/orders/:order_id', to: 'orders#show', as: 'restaurant_order'
+        get '/restaurants/:id/orders', to: 'orders#index', as: 'restaurant_orders'
 
-        patch '/items/:id', to: 'api/v1/owner/items#update', as: 'update_item'
-        patch '/restaurants/:id', to: 'api/v1/owner/restaurants#update', as: 'update_restaurant'
-        patch '/restaurants/:restaurant_id/orders/:order_id', to: 'api/v1/owner/orders#update', as: 'update_restaurant_order'
+        patch '/items/:id', to: 'items#update', as: 'update_item'
+        patch '/restaurants/:id', to: 'restaurants#update', as: 'update_restaurant'
+        patch '/restaurants/:restaurant_id/orders/:order_id', to: 'orders#update', as: 'update_restaurant_order'
 
-        post '/restaurants', to: 'api/v1/owner/restaurants#create', as: 'new_owner_restaurant'
-        post '/restaurants/:id/items', to: 'api/v1/owner/items#create', as: 'new_restaurant_item'
+        post '/restaurants', to: 'restaurants#create', as: 'new_owner_restaurant'
+        post '/restaurants/:id/items', to: 'items#create', as: 'new_restaurant_item'
 
-        # delete '/items/:id', to: 'api/v1/owner/items#destroy', as: 'destroy_item'
+        # delete '/items/:id', to: 'items#destroy', as: 'destroy_item'
         # instead of deleting items (which can break existing orders), set an item to not visible
       end
     end
