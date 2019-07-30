@@ -35,7 +35,7 @@ module MenuDemoApi
     # let requests from localhost through
     config.middleware.insert_before 0, Rack::Cors do
       allow do
-         origins '*', 'http://localhost:8080' # 'http://localhost:8080', 'https://localhost:8080'
+         origins '*' #, 'http://localhost:8080' # 'http://localhost:8080', 'https://localhost:8080'
          resource '*', :headers => :any, :methods => [:get, :post, :options], expose: ['Authorization']
        end
     end

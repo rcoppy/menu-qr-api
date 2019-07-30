@@ -11,7 +11,7 @@ class Api::V1::Owner::OrdersController < ApplicationController
 
   # GET /orders/1
   def show
-    render json: @order
+    render json: { order: @order, items: @order.items }
   end
 
   # PATCH/PUT /orders/1
